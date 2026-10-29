@@ -5,7 +5,7 @@ import signal
 import sys
 
 TIKTOK_URL = "https://www.tiktok.com/@d.shakertawfiqalaroury/live"
-YOUTUBE_RTMP = "rtmp://a.rtmp.youtube.com/live2/vksy-du6k-8cxj-u7kh-7mfm"
+YOUTUBE_RTMP = "rtmp://a.rtmp.youtube.com/live2/5czj-a0sq-5cmp-4aps-bq5h"
 
 CHECK_INTERVAL_OFFLINE = 15       # وقت الفحص إذا كان البث متوقف تماماً (15 ثانية)
 RECONNECT_INTERVAL_ONLINE = 0.1   # وقت إعادة الاتصال الفوري عند التقطيع (0.1 ثانية)
