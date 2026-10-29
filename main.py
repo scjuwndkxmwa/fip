@@ -7,12 +7,12 @@ import sys
 TIKTOK_URL = "https://www.tiktok.com/@d.shakertawfiqalaroury/live"
 YOUTUBE_RTMP = "rtmp://a.rtmp.youtube.com/live2/vksy-du6k-8cxj-u7kh-7mfm"
 
-CHECK_INTERVAL_OFFLINE = 15       # وقت الفحص عندما يكون البث متوقفاً تماماً (15 ثانية)
-RECONNECT_INTERVAL_ONLINE = 0.1   # إعادة الاتصال فوراً عند التقطيع (0.1 ثانية فقط)
+CHECK_INTERVAL_OFFLINE = 15       # وقت الفحص إذا كان البث متوقف تماماً (15 ثانية)
+RECONNECT_INTERVAL_ONLINE = 0.1   # وقت إعادة الاتصال الفوري عند التقطيع (0.1 ثانية)
 
 STREAMLINK_CMD = [
     "streamlink",
-    "--hls-live-edge", "5",
+    "--hls-live-edge", "1",        # جلب أحدث لقطة فوراً لمنع تكرار المشاهد
     "--ringbuffer-size", "512M",
     "--retry-streams", "0",
     "--retry-max", "0",
@@ -47,6 +47,7 @@ FFMPEG_CMD = [
     "-ac", "2",
     "-af", "aresample=async=1000:min_hard_comp=0.100000:first_pts=0",
 
+    "-avoid_negative_ts", "make_zero",
     "-fps_mode", "passthrough",
     "-flush_packets", "1",
 
@@ -103,7 +104,7 @@ while True:
         streamlink_process = subprocess.Popen(
             STREAMLINK_CMD,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=None,  # تم التعديل لإظهار الأخطاء والرسائل مباشرة في الـ Logs
             bufsize=0
         )
 
