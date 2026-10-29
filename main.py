@@ -7,18 +7,18 @@ import sys
 TIKTOK_URL = "https://www.tiktok.com/@d.shakertawfiqalaroury/live"
 YOUTUBE_RTMP = "rtmp://a.rtmp.youtube.com/live2/5czj-a0sq-5cmp-4aps-bq5h"
 
-CHECK_INTERVAL_OFFLINE = 15       # وقت الفحص إذا كان البث متوقف تماماً
+CHECK_INTERVAL_OFFLINE = 15       # وقت الفحص عندما يكون البث غير متاح تماماً
 RECONNECT_INTERVAL_ONLINE = 0.1   # وقت إعادة الاتصال السريع عند التقطيع
 
 STREAMLINK_CMD = [
     "streamlink",
-    "--hls-live-edge", "2",        # ضبط الحافة على 2 لضمان استقرار الشبكة ومنع السقوط المستمر
+    "--hls-live-edge", "3",        # القيمة المثالية لثبات الحركة والصوت مع الـ VPN
     "--ringbuffer-size", "512M",
     "--retry-streams", "0",
     "--retry-max", "0",
     "--stream-segment-attempts", "10",
     "--stream-segment-timeout", "10",
-    "--stream-timeout", "15",
+    "--stream-timeout", "20",
     "--stdout",
     TIKTOK_URL,
     "best"
@@ -30,12 +30,10 @@ FFMPEG_CMD = [
     "-loglevel", "warning",
     "-stats",
 
-    # استخدام توقيت الساعة الحقيقية لمنع تكرار اللقطات القديمة عند إعادة الاتصال
-    "-use_wallclock_as_timestamps", "1",
-    "-fflags", "+genpts+discardcorrupt+igndts",
+    "-fflags", "+genpts+discardcorrupt",
     "-err_detect", "ignore_err",
 
-    "-thread_queue_size", "2048",
+    "-thread_queue_size", "4096",  # مضاعفة المساحة لاستيعاب أي تباطؤ في الـ VPN
     "-i", "-",
 
     "-map", "0:v:0",
@@ -46,7 +44,7 @@ FFMPEG_CMD = [
     "-b:a", "128k",
     "-ar", "44100",
     "-ac", "2",
-    "-af", "aresample=async=1000:min_hard_comp=0.100000:first_pts=0",
+    "-af", "aresample=async=10000:min_hard_comp=0.100000:first_pts=0",
 
     "-avoid_negative_ts", "make_zero",
     "-fps_mode", "passthrough",
